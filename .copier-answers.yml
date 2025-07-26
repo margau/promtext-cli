@@ -9,3 +9,5 @@ project_description: Prometheus Textfile Tooling
 project_name: promtext-cli
 pypi_publish: true
 pypi_publish_dev: true
+
+#copier updated
