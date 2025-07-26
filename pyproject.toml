@@ -31,6 +31,7 @@ Source = "https://codeberg.org/margau/promtext-cli.git"
 [project.scripts]
 promtext = "promtext_cli.main:promtext"
 
+
 # Dev Dependencies
 [tool.uv]
 dev-dependencies = [
