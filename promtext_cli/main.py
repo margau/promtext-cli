@@ -85,29 +85,37 @@ def promtext():
     m = False
 
     # figure out labelkey- and values
-    labelnames = []
-    labelvalues = []
+    labels = {}
     if args.label:
         for lpair in args.label:
             k, v = lpair.split("=")
-            labelnames.append(k)
-            labelvalues.append(v)
+            labels[k] = v
 
+    labelvalues = []
     # here, we use a new metric
     if args.metric not in metrics:
         logger.info("adding new metric %s", args.metric)
-        m = Gauge(args.metric, args.docs, registry=registry, labelnames=labelnames)
+        m = Gauge(args.metric, args.docs, registry=registry, labelnames=labels.keys())
+        labelvalues = labels.values()
     else:
         m = metrics[args.metric]
+        
         old_labelnames = list(m._labelnames)
-        if old_labelnames != labelnames:
-            logger.error("labelnames for metric %s not compatible, cannot update! Old: %s, New: %s",
-                args.metric, old_labelnames, labelnames)
+        for la in old_labelnames:
+            logger.info("processing label %s", la)
+            if la in labels: # labelvalues are needed in order!
+                labelvalues.append(labels[la])
+            else:
+                logger.error("previously known label '%s' missing, cannot update!", la)
+                sys.exit(1)
+        if len(old_labelnames) != len(labels.keys()):
+            logger.error("labelnames for metric %s not the same, cannot update! Old: %s, New: %s",
+                args.metric, old_labelnames, list(labels.keys()))
             sys.exit(1)
         logger.info("updating metric %s", args.metric)
 
     # actually set the value
-    if len(labelnames) > 0:
+    if len(labelvalues) > 0:
         m.labels(*labelvalues).set(args.value)
     else:
         m.set(args.value)
