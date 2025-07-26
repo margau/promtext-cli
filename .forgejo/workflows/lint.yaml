@@ -1,0 +1,24 @@
+name: lint
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  forgejo:
+    runs-on: docker
+    container:
+      image: codeberg.org/margau/buildenv-uv:latest@sha256:4ba7a39eb67e1520b3772cd21e565a688b131858a668c8843b154ee29932180a
+
+    steps:
+      - uses: https://code.forgejo.org/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+      - name: check with ruff
+        run: uv run ruff check src || exit 0 
+      - name: format with ruff
+        run: uv run ruff format --check src || exit 0 
+      - name: check with pylint
+        run: uv run pylint src || exit 0 

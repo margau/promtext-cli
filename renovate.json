@@ -2,5 +2,36 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>margau/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "matchFileNames": [
+        ".forgejo/workflows/commitlint.yaml",
+        ".forgejo/workflows/lint.yaml",
+        ".forgejo/workflows/publish.yaml"
+      ],
+      "enabled": false
+    },
+    {
+      "matchFileNames": [
+        ".forgejo/workflows/commitlint.yaml",
+        ".forgejo/workflows/lint.yaml",
+        ".forgejo/workflows/publish.yaml"
+      ],
+      "matchManagers": [
+        "copier"
+      ],
+      "enabled": true
+    },
+    {
+      "matchManagers": [
+        "docker-compose"
+      ],
+      "matchUpdateTypes": [
+        "pin",
+        "digest"
+      ],
+      "enabled": false
+    }
   ]
 }

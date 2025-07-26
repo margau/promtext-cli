@@ -1,0 +1,11 @@
+# Changes here will be overwritten by Copier.
+_commit: 0.0.61
+_src_path: https://codeberg.org/margau/copier-python-uv.git
+forgejo_url: https://codeberg.org/margau/promtext-cli
+ignore_pylint: true
+ignore_ruff: true
+ignore_ruff_format: true
+project_description: Prometheus Textfile Tooling
+project_name: promtext-cli
+pypi_publish: true
+pypi_publish_dev: true
