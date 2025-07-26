@@ -26,7 +26,6 @@ Documentation = "https://codeberg.org/margau/promtext-cli/src/branch/main#readme
 Issues = "https://codeberg.org/margau/promtext-cli/issues"
 Source = "https://codeberg.org/margau/promtext-cli.git"
 
-
 # Scripts
 [project.scripts]
 promtext = "promtext_cli.main:promtext"
