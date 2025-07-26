@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "promtext-cli"
+description = 'Prometheus Textfile Tooling'
+readme = "README.md"
+requires-python = ">=3.7"
+license = "GPL-3.0"
+keywords = [
+  "Prometheus"
+]
+authors = [
+  { name = "margau", email = "dev@marvingaube.de" }
+]
+classifiers = []
+dependencies = [
+  "prometheus_client"
+]
+dynamic = ["version"]
+
+[project.urls]
+Issues = "https://github.com/margau/promtext-cli/issues"
+Source = "https://github.com/margau/promtext-cli"
+
+[project.scripts]
+promtext = "promtext_cli.main:promtext"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.envs.ci]
+dependencies = [
+  "pylint",
+  "ruff",
+]
+
+[tool.hatch.envs.ci.scripts]
+check = "ruff check promtext_cli"
+lint = "pylint promtext_cli || exit 0"
