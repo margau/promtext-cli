@@ -36,6 +36,7 @@ promtext = "promtext_cli.main:promtext"
 dev-dependencies = [
   "ruff",
   "pylint",
+  "pytest",
 ]
 cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true } }]
 
