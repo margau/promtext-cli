@@ -39,9 +39,10 @@ dev = [
   "cli-test-helpers>=4.2.0",
 ]
 
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true } }]
+
 [tool.coverage.run]
 source = ["src", "tests"]
-
-cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true } }]
 
 # TODO: Dev/CI scripts for lint & co.
