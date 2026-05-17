@@ -36,6 +36,7 @@ dev = [
   "pylint>=4.0.5",
   "pytest>=9.0.3",
   "coverage>=7.14.0",
+  "cli-test-helpers>=4.2.0",
 ]
 
 [tool.coverage.run]

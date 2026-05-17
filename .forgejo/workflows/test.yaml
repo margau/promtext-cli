@@ -20,6 +20,6 @@ jobs:
       - name: Install the project
         run: uv sync --locked --all-extras --dev
       - name: run pytest
-        run: uv run coverage -m pytest -v || exit 0 
+        run: uv run coverage -m pytest -v
       - name: show coverage
         run: uv run coverage report -m

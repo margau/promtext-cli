@@ -6,7 +6,7 @@ container: false
 forgejo_publish: true
 forgejo_url: https://codeberg.org/margau/promtext-cli
 ignore_pylint: true
-ignore_pytest: true
+ignore_pytest: false
 ignore_ruff: true
 ignore_ruff_format: true
 project_description: Prometheus Textfile Tooling

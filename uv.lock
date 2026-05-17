@@ -20,6 +20,15 @@ wheels = [
 ]
 
 [[package]]
+name = "cli-test-helpers"
+version = "4.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/21/7f/e75d5401607fe7ecbdb61f2834c938188d5701625006851214063ae9d59b/cli_test_helpers-4.2.0.tar.gz", hash = "sha256:c7dc8f26a1ca30ff63d75ef2f259ec7044e1c4a78dede204627e069861257b06", size = 50969, upload-time = "2025-12-15T09:54:21.464Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/02/4b/3d6ef5cfb906b2e53b8af97023ac17d103b9ba1a795587d3a2b6ad9a8e1e/cli_test_helpers-4.2.0-py3-none-any.whl", hash = "sha256:6b644e0abc3e9a22fae9765cde96a525ca317f7e296a5f25ff1dcfebfec1119a", size = 35706, upload-time = "2025-12-15T09:54:20.561Z" },
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -234,6 +243,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "cli-test-helpers" },
     { name = "coverage" },
     { name = "pylint" },
     { name = "pytest" },
@@ -245,6 +255,7 @@ requires-dist = [{ name = "prometheus-client" }]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "cli-test-helpers", specifier = ">=4.2.0" },
     { name = "coverage", specifier = ">=7.14.0" },
     { name = "pylint", specifier = ">=4.0.5" },
     { name = "pytest", specifier = ">=9.0.3" },
