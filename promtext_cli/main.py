@@ -1,5 +1,8 @@
 """promtext_cli is providing a CLI to cleanly update prometheus textfiles from scripts"""
 
+# pylint: disable=C0116,R0914,R0912,R0915
+# this rules will be fixed by a object-oriented refactoring
+
 import argparse
 from pathlib import Path
 import logging
@@ -8,37 +11,43 @@ import sys
 from prometheus_client.parser import text_string_to_metric_families
 from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
 
+
 def promtext():
     # setup argpars
     # required file first
-    parser = argparse.ArgumentParser(description='Prometheus textfile helper')
+    parser = argparse.ArgumentParser(description="Prometheus textfile helper")
     parser.add_argument(
-        'filename', 
+        "filename",
         type=str,
-        help='Path to existing or new prometheus textfile, will be updated'
-        )
+        help="Path to existing or new prometheus textfile, will be updated",
+    )
 
     # metric name, required
-    parser.add_argument(
-        'metric', 
-        type=str,
-        help='metric name (new or updated)')
+    parser.add_argument("metric", type=str, help="metric name (new or updated)")
 
     # metric value as int/float, required
-    parser.add_argument('value', type=float, help='metric value')
+    parser.add_argument("value", type=float, help="metric value")
 
     # metric documentation as optional argument
     parser.add_argument(
-        '--docs', type=str, 
-        help='metric documentation', default="metric appended by promtext-cli")
+        "--docs",
+        type=str,
+        help="metric documentation",
+        default="metric appended by promtext-cli",
+    )
 
     # labels, key-value, minimum 0, repeatable
-    parser.add_argument("--label", metavar="KEY=VALUE", help='label key=value pairs', action='append')
+    parser.add_argument(
+        "--label", metavar="KEY=VALUE", help="label key=value pairs", action="append"
+    )
 
     # log level from argparse
     parser.add_argument(
-        '-v', '--verbose',
-        action="store_const", dest="loglevel", const=logging.INFO,
+        "-v",
+        "--verbose",
+        action="store_const",
+        dest="loglevel",
+        const=logging.INFO,
     )
     args = parser.parse_args()
     logging.basicConfig(level=args.loglevel)
@@ -52,7 +61,7 @@ def promtext():
 
     # check if args.filename exists with pathlib
     if textfile.is_file():
-        for f in text_string_to_metric_families(textfile.read_text()):
+        for f in text_string_to_metric_families(textfile.read_text(encoding="utf-8")):
             # per metric: iterate over samples, create metric in registry
             m = False
             samples = []
@@ -63,8 +72,13 @@ def promtext():
                 labelnames = list(samples[0].labels.keys())
                 # metric-type specific init
                 if f.type == "gauge":
-                    m = Gauge(f.name, f.documentation,
-                        unit=f.unit, labelnames=labelnames, registry=registry)
+                    m = Gauge(
+                        f.name,
+                        f.documentation,
+                        unit=f.unit,
+                        labelnames=labelnames,
+                        registry=registry,
+                    )
                 else:
                     # we don't support other types yet, continue in these cases
                     logger.warning("unsupported metric type %s, dropping", f.type)
@@ -76,8 +90,11 @@ def promtext():
                     else:
                         m.set(s.value)
                 metrics[f.name] = m
-                logger.info("copy gauge metric %s with labels %s from old file",
-                    f.name, ', '.join(labelnames))
+                logger.info(
+                    "copy gauge metric %s with labels %s from old file",
+                    f.name,
+                    ", ".join(labelnames),
+                )
             else:
                 logger.warning("got empty metric %s from old file, dropping", f.name)
 
@@ -99,18 +116,24 @@ def promtext():
         labelvalues = labels.values()
     else:
         m = metrics[args.metric]
-        
+
+        # There is no way to access existing labelnames directly
+        # pylint: disable=W0212
         old_labelnames = list(m._labelnames)
         for la in old_labelnames:
             logger.info("processing label %s", la)
-            if la in labels: # labelvalues are needed in order!
+            if la in labels:  # labelvalues are needed in order!
                 labelvalues.append(labels[la])
             else:
                 logger.error("previously known label '%s' missing, cannot update!", la)
                 sys.exit(1)
         if len(old_labelnames) != len(labels.keys()):
-            logger.error("labelnames for metric %s not the same, cannot update! Old: %s, New: %s",
-                args.metric, old_labelnames, list(labels.keys()))
+            logger.error(
+                "labelnames for metric %s not the same, cannot update! Old: %s, New: %s",
+                args.metric,
+                old_labelnames,
+                list(labels.keys()),
+            )
             sys.exit(1)
         logger.info("updating metric %s", args.metric)
 
@@ -124,5 +147,6 @@ def promtext():
     write_to_textfile(args.filename, registry)
     logger.info("wrote to %s", args.filename)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     promtext()

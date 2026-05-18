@@ -1,11 +1,16 @@
+# pylint: disable=R0801
+"""This script does blackbox-like testing of the promtext cli tool"""
+
 import shutil
 from cli_test_helpers import shell
+
 
 def test_entrypoint():
     """
     Is entrypoint script installed? (pyproject.toml)
     """
     assert shutil.which("promtext")
+
 
 def test_help():
     """
@@ -15,6 +20,7 @@ def test_help():
     assert result.exit_code == 0
     assert "usage:" in result.stdout
 
+
 def test_empty():
     """
     Does the command fails with no arguments?
@@ -22,6 +28,7 @@ def test_empty():
     result = shell("promtext")
     assert result.exit_code == 2
     assert "usage:" in result.stderr
+
 
 def test_new_file(tmp_path):
     """
@@ -32,7 +39,10 @@ def test_new_file(tmp_path):
     assert result.exit_code == 0
     assert promfile.exists()
     assert promfile.read_text() == (
-        "# HELP test_metric metric appended by promtext-cli" "\n" 
-        "# TYPE test_metric gauge" "\n" 
-        "test_metric 0.0" "\n"
+        "# HELP test_metric metric appended by promtext-cli"
+        "\n"
+        "# TYPE test_metric gauge"
+        "\n"
+        "test_metric 0.0"
+        "\n"
     )
