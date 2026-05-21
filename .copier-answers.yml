@@ -14,4 +14,4 @@ project_name: promtext-cli
 pypi_publish: true
 pypi_publish_dev: true
 scripts:
-    promtext: promtext_cli.main:promtext
+    promtext: promtext_cli:main.main

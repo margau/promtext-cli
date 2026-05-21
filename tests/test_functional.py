@@ -4,7 +4,7 @@
 from cli_test_helpers import ArgvContext
 import pytest
 
-import promtext_cli.main
+from promtext_cli.main import main as promtext_main
 
 
 def test_new_file(tmp_path):
@@ -13,7 +13,7 @@ def test_new_file(tmp_path):
     """
     promfile = tmp_path / "new_file.prom"
     with ArgvContext("promtext", str(promfile), "test_metric", "0"):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP test_metric metric appended by promtext-cli"
@@ -33,7 +33,7 @@ def test_labels(tmp_path):
     with ArgvContext(
         "promtext", "--label", "testlabel=testvalue", str(promfile), "test_metric", 0
     ):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP test_metric metric appended by promtext-cli"
@@ -62,7 +62,7 @@ def test_existing_metric_append_metric(tmp_path):
     with ArgvContext(
         "promtext", "--label", "testlabel=testvalue", str(promfile), "new_metric", 0
     ):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP existing_metric metric appended by promtext-cli"
@@ -97,7 +97,7 @@ def test_existing_metric_append_labelvalue(tmp_path):
     with ArgvContext(
         "promtext", "--label", "testlabel=new", str(promfile), "existing_metric", 0
     ):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP existing_metric metric appended by promtext-cli"
@@ -135,7 +135,7 @@ def test_existing_metric_multilabel(tmp_path):
         "existing_metric",
         "42",
     ):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP existing_metric metric appended by promtext-cli"
@@ -170,7 +170,7 @@ def test_existing_metric_overwrite(tmp_path):
         "existing_metric",
         "42",
     ):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP existing_metric metric appended by promtext-cli"
@@ -196,7 +196,7 @@ def test_existing_metric_plain(tmp_path):
         "\n"
     )
     with ArgvContext("promtext", str(promfile), "existing_metric", "42"):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP existing_metric metric appended by promtext-cli"
@@ -226,7 +226,7 @@ def test_existing_metric_labeldrop(tmp_path, capsys):
         ArgvContext("promtext", str(promfile), "existing_metric", "42"),
         pytest.raises(SystemExit) as pytest_wrapped_e,
     ):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP existing_metric metric appended by promtext-cli"
@@ -240,10 +240,7 @@ def test_existing_metric_labeldrop(tmp_path, capsys):
     assert pytest_wrapped_e.type is SystemExit
     assert pytest_wrapped_e.value.code == 1
     captured = capsys.readouterr()
-    assert (
-        "ERROR:promtext_cli.main:previously known label 'testlabel' missing, cannot update!"
-        in captured.err
-    )
+    assert "previously known label 'testlabel' missing, cannot update!" in captured.err
 
 
 def test_existing_metric_labelchange(tmp_path, capsys):
@@ -271,7 +268,7 @@ def test_existing_metric_labelchange(tmp_path, capsys):
         ),
         pytest.raises(SystemExit) as pytest_wrapped_e,
     ):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP existing_metric metric appended by promtext-cli"
@@ -286,8 +283,7 @@ def test_existing_metric_labelchange(tmp_path, capsys):
     assert pytest_wrapped_e.value.code == 1
     captured = capsys.readouterr()
     assert (
-        "ERROR:promtext_cli.main:previously known label 'existinglabel' missing, cannot update!"
-        in captured.err
+        "previously known label 'existinglabel' missing, cannot update!" in captured.err
     )
 
 
@@ -318,7 +314,7 @@ def test_existing_metric_labeladd(tmp_path, capsys):
         ),
         pytest.raises(SystemExit) as pytest_wrapped_e,
     ):
-        promtext_cli.main.promtext()
+        promtext_main()
     assert promfile.exists()
     assert promfile.read_text() == (
         "# HELP existing_metric metric appended by promtext-cli"
@@ -333,7 +329,7 @@ def test_existing_metric_labeladd(tmp_path, capsys):
     assert pytest_wrapped_e.value.code == 1
     captured = capsys.readouterr()
     assert (
-        "ERROR:promtext_cli.main:labelnames for metric existing_metric not the same, cannot update"
+        "labelnames for metric existing_metric not the same, cannot update"
         in captured.err
     )
 

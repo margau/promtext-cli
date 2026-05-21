@@ -28,7 +28,7 @@ Source = "https://codeberg.org/margau/promtext-cli.git"
 
 # Scripts
 [project.scripts]
-promtext = "promtext_cli.main:promtext"
+promtext = "promtext_cli:main.main"
 
 [dependency-groups]
 dev = [
@@ -43,6 +43,6 @@ dev = [
 cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true } }]
 
 [tool.coverage.run]
-source = ["src", "tests"]
+source = ["promtext_cli", "tests"]
 
 # TODO: Dev/CI scripts for lint & co.
