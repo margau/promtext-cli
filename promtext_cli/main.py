@@ -1,10 +1,10 @@
-"""This module takes care of entrypoints"""
+"""Provide the Entrypoints"""
 
 from .promtext import Promtext
 
 
 def main():
-    """main method invoking the core class"""
+    """Main method invoking the core class"""
     Promtext().cli_entrypoint()
 
 

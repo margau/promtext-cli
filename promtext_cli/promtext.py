@@ -1,12 +1,12 @@
-"""this is the module providing the core functionality"""
+"""module providing the core functionality"""
 
 import argparse
-from pathlib import Path
 import logging
 import sys
+from pathlib import Path
 
-from prometheus_client.parser import text_string_to_metric_families
 from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
+from prometheus_client.parser import text_string_to_metric_families
 
 
 class Promtext:
@@ -21,7 +21,7 @@ class Promtext:
         self.metrics = {}
 
     def _arguments(self):
-        """load every input item from arguments & define cli"""
+        """Load every input item from arguments & define cli"""
         # required file first
         parser = argparse.ArgumentParser(description="Prometheus textfile helper")
         parser.add_argument(
@@ -70,13 +70,11 @@ class Promtext:
         # check if self.args.filename exists with pathlib
         if self.textfile.is_file():
             for f in text_string_to_metric_families(
-                self.textfile.read_text(encoding="utf-8")
+                self.textfile.read_text(encoding="utf-8"),
             ):
                 # per metric: iterate over samples, create metric in registry
                 m = False
-                samples = []
-                for s in f.samples:
-                    samples.append(s)
+                samples = list(f.samples)
                 if len(samples) > 0:
                     # if we have samples, use the labelnames from them
                     labelnames = list(samples[0].labels.keys())
@@ -92,7 +90,8 @@ class Promtext:
                     else:
                         # we don't support other types yet, continue in these cases
                         self.logger.warning(
-                            "unsupported metric type %s, dropping", f.type
+                            "unsupported metric type %s, dropping",
+                            f.type,
                         )
                         continue
                     for s in samples:
@@ -109,7 +108,8 @@ class Promtext:
                     )
                 else:
                     self.logger.warning(
-                        "got empty metric %s from old file, dropping", f.name
+                        "got empty metric %s from old file, dropping",
+                        f.name,
                     )
 
     def _build_metrics(self):
@@ -139,19 +139,21 @@ class Promtext:
 
             # There is no way to access existing labelnames directly
             # pylint: disable=W0212
-            old_labelnames = list(m._labelnames)
+            old_labelnames = list(m._labelnames)  # noqa: SLF001
             for la in old_labelnames:
                 self.logger.info("processing label %s", la)
                 if la in labels:  # labelvalues are needed in order!
                     labelvalues.append(labels[la])
                 else:
                     self.logger.error(
-                        "previously known label '%s' missing, cannot update!", la
+                        "previously known label '%s' missing, cannot update!",
+                        la,
                     )
                     sys.exit(1)
             if len(old_labelnames) != len(labels.keys()):
                 self.logger.error(
-                    "labelnames for metric %s not the same, cannot update! Old: %s, New: %s",
+                    """labelnames for metric %s not the same, cannot update!
+                    Old: %s, New: %s""",
                     self.args.metric,
                     old_labelnames,
                     list(labels.keys()),

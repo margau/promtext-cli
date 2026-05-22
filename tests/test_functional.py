@@ -1,16 +1,14 @@
 # pylint: disable=R0801,W0511
-"""This script does functional testing by calling the methods directly"""
+"""Functional testing by calling the methods directly"""
 
-from cli_test_helpers import ArgvContext
 import pytest
+from cli_test_helpers import ArgvContext
 
 from promtext_cli.main import main as promtext_main
 
 
 def test_new_file(tmp_path):
-    """
-    Does the command create a new file with metrics content?
-    """
+    """Does the command create a new file with metrics content?"""
     promfile = tmp_path / "new_file.prom"
     with ArgvContext("promtext", str(promfile), "test_metric", "0"):
         promtext_main()
@@ -26,12 +24,15 @@ def test_new_file(tmp_path):
 
 
 def test_labels(tmp_path):
-    """
-    Does the command create a new file with metrics content?
-    """
+    """Does the command create a new file with metrics content?"""
     promfile = tmp_path / "label_file.prom"
     with ArgvContext(
-        "promtext", "--label", "testlabel=testvalue", str(promfile), "test_metric", 0
+        "promtext",
+        "--label",
+        "testlabel=testvalue",
+        str(promfile),
+        "test_metric",
+        0,
     ):
         promtext_main()
     assert promfile.exists()
@@ -46,8 +47,7 @@ def test_labels(tmp_path):
 
 
 def test_existing_metric_append_metric(tmp_path):
-    """
-    Does the command append a new metric to an existing file
+    """Does the command append a new metric to an existing file
     with metrics content and preserve existing metrics?
     """
     promfile = tmp_path / "existing_file.prom"
@@ -57,10 +57,15 @@ def test_existing_metric_append_metric(tmp_path):
         "# TYPE existing_metric gauge"
         "\n"
         'existing_metric{testlabel="testvalue"} 0.0'
-        "\n"
+        "\n",
     )
     with ArgvContext(
-        "promtext", "--label", "testlabel=testvalue", str(promfile), "new_metric", 0
+        "promtext",
+        "--label",
+        "testlabel=testvalue",
+        str(promfile),
+        "new_metric",
+        0,
     ):
         promtext_main()
     assert promfile.exists()
@@ -81,8 +86,7 @@ def test_existing_metric_append_metric(tmp_path):
 
 
 def test_existing_metric_append_labelvalue(tmp_path):
-    """
-    Does the command append a new metric to an existing file
+    """Does the command append a new metric to an existing file
     with metrics content and preserve existing metrics?
     """
     promfile = tmp_path / "existing_file.prom"
@@ -92,10 +96,15 @@ def test_existing_metric_append_labelvalue(tmp_path):
         "# TYPE existing_metric gauge"
         "\n"
         'existing_metric{testlabel="existing"} 0.0'
-        "\n"
+        "\n",
     )
     with ArgvContext(
-        "promtext", "--label", "testlabel=new", str(promfile), "existing_metric", 0
+        "promtext",
+        "--label",
+        "testlabel=new",
+        str(promfile),
+        "existing_metric",
+        0,
     ):
         promtext_main()
     assert promfile.exists()
@@ -112,8 +121,7 @@ def test_existing_metric_append_labelvalue(tmp_path):
 
 
 def test_existing_metric_multilabel(tmp_path):
-    """
-    Does the command append a new metric to an existing file
+    """Does the command append a new metric to an existing file
     with metrics content and preserve existing metrics?
     """
     promfile = tmp_path / "existing_file.prom"
@@ -123,7 +131,7 @@ def test_existing_metric_multilabel(tmp_path):
         "# TYPE existing_metric gauge"
         "\n"
         'existing_metric{first="existing", second="existing"} 0.0'
-        "\n"
+        "\n",
     )
     with ArgvContext(
         "promtext",
@@ -150,9 +158,7 @@ def test_existing_metric_multilabel(tmp_path):
 
 
 def test_existing_metric_overwrite(tmp_path):
-    """
-    Does the command overwrite a metric/labelset
-    """
+    """Does the command overwrite a metric/labelset"""
     promfile = tmp_path / "existing_file.prom"
     promfile.write_text(
         "# HELP existing_metric metric appended by promtext-cli"
@@ -160,7 +166,7 @@ def test_existing_metric_overwrite(tmp_path):
         "# TYPE existing_metric gauge"
         "\n"
         'existing_metric{testlabel="existing"} 0.0'
-        "\n"
+        "\n",
     )
     with ArgvContext(
         "promtext",
@@ -183,9 +189,7 @@ def test_existing_metric_overwrite(tmp_path):
 
 
 def test_existing_metric_plain(tmp_path):
-    """
-    Does the command overwrite a metric without a label?
-    """
+    """Does the command overwrite a metric without a label?"""
     promfile = tmp_path / "existing_file.prom"
     promfile.write_text(
         "# HELP existing_metric metric appended by promtext-cli"
@@ -193,7 +197,7 @@ def test_existing_metric_plain(tmp_path):
         "# TYPE existing_metric gauge"
         "\n"
         "existing_metric 0.0"
-        "\n"
+        "\n",
     )
     with ArgvContext("promtext", str(promfile), "existing_metric", "42"):
         promtext_main()
@@ -209,9 +213,7 @@ def test_existing_metric_plain(tmp_path):
 
 
 def test_existing_metric_labeldrop(tmp_path, capsys):
-    """
-    missing labels are not possible, promtext should fail
-    """
+    """Missing labels are not possible, promtext should fail"""
     promfile = tmp_path / "existing_file.prom"
     promfile.write_text(
         "# HELP existing_metric metric appended by promtext-cli"
@@ -219,7 +221,7 @@ def test_existing_metric_labeldrop(tmp_path, capsys):
         "# TYPE existing_metric gauge"
         "\n"
         'existing_metric{testlabel="existing"} 0.0'
-        "\n"
+        "\n",
     )
 
     with (
@@ -244,9 +246,7 @@ def test_existing_metric_labeldrop(tmp_path, capsys):
 
 
 def test_existing_metric_labelchange(tmp_path, capsys):
-    """
-    changing labels are not possible, promtext should fail
-    """
+    """Changing labels are not possible, promtext should fail"""
     promfile = tmp_path / "existing_file.prom"
     promfile.write_text(
         "# HELP existing_metric metric appended by promtext-cli"
@@ -254,7 +254,7 @@ def test_existing_metric_labelchange(tmp_path, capsys):
         "# TYPE existing_metric gauge"
         "\n"
         'existing_metric{existinglabel="existing"} 0.0'
-        "\n"
+        "\n",
     )
 
     with (
@@ -288,9 +288,7 @@ def test_existing_metric_labelchange(tmp_path, capsys):
 
 
 def test_existing_metric_labeladd(tmp_path, capsys):
-    """
-    adding new labels are not possible, promtext should fail
-    """
+    """Adding new labels are not possible, promtext should fail"""
     promfile = tmp_path / "existing_file.prom"
     promfile.write_text(
         "# HELP existing_metric metric appended by promtext-cli"
@@ -298,7 +296,7 @@ def test_existing_metric_labeladd(tmp_path, capsys):
         "# TYPE existing_metric gauge"
         "\n"
         'existing_metric{existinglabel="existing"} 0.0'
-        "\n"
+        "\n",
     )
 
     with (
