@@ -16,7 +16,7 @@ jobs:
     env:
       UV_CACHE_DIR: /tmp/.uv-cache
     container:
-      image: codeberg.org/margau/buildenv-uv:latest@sha256:21341781982a3f2a87172cd923cfc1229a28131311de4a1183c9f2cc61167b1f
+      image: codeberg.org/margau/buildenv-uv:latest@sha256:d18df97ec6d120333d90b959b2806bb4fab40160e902f1f3da53360f3a2e0c9f
     
     steps:
       - uses: https://code.forgejo.org/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -49,7 +49,7 @@ jobs:
         env:
           GITEA_REPO: "${{ forgejo.repository }}"
       - name: Upload release assets to Forgejo
-        uses: https://code.forgejo.org/actions/forgejo-release@7a109b1d54c0a0814319cf03a3ba5076fd3be17b # v2.12.0
+        uses: https://code.forgejo.org/actions/forgejo-release@ccebdd6620fbfe82b38675283d7bb23de82c3c54 # v2.12.1
         if: "${{ startsWith(github.ref, 'refs/tags') }}"
         with:
           direction: upload
@@ -67,7 +67,7 @@ jobs:
     name: "Draft Release Notes"
     runs-on: docker
     container:
-      image: codeberg.org/margau/buildenv-uv:latest@sha256:21341781982a3f2a87172cd923cfc1229a28131311de4a1183c9f2cc61167b1f
+      image: codeberg.org/margau/buildenv-uv:latest@sha256:d18df97ec6d120333d90b959b2806bb4fab40160e902f1f3da53360f3a2e0c9f
     
     steps:
       - uses: https://code.forgejo.org/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
