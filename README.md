@@ -11,13 +11,12 @@ Features:
 
 ## Usage
 ```
-promtext -h
-usage: main.py [-h] [--docs DOCS] [--label KEY=VALUE] [-v] filename metric value
+usage: promtext [-h] [--docs DOCS] [--label KEY=VALUE] [-v] [filename] metric value
 
 Prometheus textfile helper
 
 positional arguments:
-  filename           Path to existing or new prometheus textfile, will be updated
+  filename           optional path to existing or new prometheus textfile (will be created or updated)
   metric             metric name (new or updated)
   value              metric value
 
@@ -27,6 +26,8 @@ options:
   --label KEY=VALUE  label key=value pairs
   -v, --verbose
 ```
+
+If the filename is missing, an file named after the metric in `/var/prometheus` (or the directory specificed in the `PROMTEXT_DIR`-ENV) will be used.
 
 ## Examples
 `tmp/backup.prom` before:

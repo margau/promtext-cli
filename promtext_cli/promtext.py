@@ -2,6 +2,7 @@
 
 import argparse
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -26,8 +27,11 @@ class Promtext:
         parser = argparse.ArgumentParser(description="Prometheus textfile helper")
         parser.add_argument(
             "filename",
-            type=str,
-            help="Path to existing or new prometheus textfile, will be updated",
+            nargs="?",
+            default=None,
+            type=Path,
+            help="""optional path to existing or new prometheus textfile
+                 (will be created or updated)""",
         )
 
         # metric name, required
@@ -62,8 +66,15 @@ class Promtext:
         )
         self.args = parser.parse_args()
 
-        # processing: check if file is available, if yes, parse
-        self.textfile = Path(self.args.filename)
+    def _config(self):
+        # figure out which file name to use
+        if self.args.filename:
+            self.textfile = self.args.filename
+        else:
+            self.textfile = Path(os.getenv("PROMTEXT_DIR", "/var/prometheus")) / Path(
+                self.args.metric + ".prom"
+            )
+            self.logger.info("using default filename %s", self.textfile)
 
     def parse_file(self):
         """If possible, convert the input textfile to metrics in the registry"""
@@ -179,6 +190,7 @@ class Promtext:
         logging.basicConfig(level=self.args.loglevel)
         self.logger = logging.getLogger(__name__)
 
+        self._config()
         self.parse_file()
         self._build_metrics()
         self.output_file()

@@ -23,6 +23,24 @@ def test_new_file(tmp_path):
     )
 
 
+def test_default_filename(tmp_path, monkeypatch):
+    """Does the command create a new file in default directory?"""
+    promfile = tmp_path / "test_metric.prom"
+    monkeypatch.setenv("PROMTEXT_DIR", str(tmp_path))
+
+    with ArgvContext("promtext", "test_metric", "0"):
+        promtext_main()
+    assert promfile.exists()
+    assert promfile.read_text() == (
+        "# HELP test_metric metric appended by promtext-cli"
+        "\n"
+        "# TYPE test_metric gauge"
+        "\n"
+        "test_metric 0.0"
+        "\n"
+    )
+
+
 def test_labels(tmp_path):
     """Does the command create a new file with metrics content?"""
     promfile = tmp_path / "label_file.prom"
