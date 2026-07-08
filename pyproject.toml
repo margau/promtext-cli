@@ -34,7 +34,7 @@ promtext = "promtext_cli:main.main"
 dev = [
   "ruff==0.15.17",
   "pylint==4.0.5",
-  "pytest==9.0.3",
+  "pytest==9.1.1",
   "coverage==7.14.1",
   "cli-test-helpers==4.2.0",
 ]
