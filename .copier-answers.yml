@@ -15,3 +15,5 @@ pypi_publish: true
 pypi_publish_dev: true
 scripts:
     promtext: promtext_cli:main.main
+
+#copier updated
