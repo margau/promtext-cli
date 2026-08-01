@@ -32,7 +32,7 @@ promtext = "promtext_cli:main.main"
 
 [dependency-groups]
 dev = [
-  "ruff==0.15.22",
+  "ruff==0.16.0",
   "pylint==4.0.6",
   "pytest==9.1.1",
   "coverage==7.15.2",
@@ -61,6 +61,7 @@ ignore = [
     "TD002", # TODO: Remove later
     "TD003", # TODO: Remove later
     "ANN", # TODO: Remove later
+    "CPY", # TODO: Remove later
     "COM812",
 ]
 
