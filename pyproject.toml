@@ -32,10 +32,10 @@ promtext = "promtext_cli:main.main"
 
 [dependency-groups]
 dev = [
-  "ruff==0.16.1",
-  "pylint==4.0.6",
+  "ruff==0.16.4",
+  "pylint==4.0.7",
   "pytest==9.1.1",
-  "coverage==7.15.2",
+  "coverage==7.15.4",
   "cli-test-helpers==4.2.0",
 ]
 
